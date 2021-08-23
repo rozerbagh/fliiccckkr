@@ -95,8 +95,10 @@ export default function PrimarySearchAppBar(props) {
                             options={searchedName}
                             fullWidth
                             getOptionSelected={(option, value) => {
-                                props.search(option.title)
-                                return option.title === value.name
+                                if (option.title === value.title) {
+                                    setSearchInput(option.title)
+                                }
+                                return option.title === value.title
                             }}
                             getOptionLabel={(option) => option.title}
                             renderInput={(params) =>

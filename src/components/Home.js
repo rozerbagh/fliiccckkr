@@ -11,6 +11,7 @@ export default function Home(props) {
     const [pageNum, setPageNum] = useState(1);
     const [hasMore, setHasMore] = useState(true);
 
+    const [urlType, setUrlType] = useState(props.urlType)
     const observer = useRef()
     const lastElement = useCallback((node) => {
         if (loading) return
@@ -19,6 +20,7 @@ export default function Home(props) {
             if (entries[0].isIntersecting && hasMore) {
                 setPageNum(prevNum => prevNum + 1);
                 setLoading(true);
+                props.handleNewItem(false);
             } else {
 
             }
@@ -26,31 +28,43 @@ export default function Home(props) {
         if (node) observer.current.observe(node)
     }, [loading, pageNum]);
 
-
-    useEffect(() => {
-        setLoading(true);
+    const fetchImages = (urlType, searchText, pageNum, newItem) => {
         const getImages = `${BASE_URL}?method=${GETIMAGES}&api_key=${API_KEY}&page=${pageNum}&per_page=72&format=json&nojsoncallback=1`;
-        const searchImages = `${BASE_URL}?method=${SERACHIMAGES}&api_key=${API_KEY}&text=${props.searchText}&page=${pageNum}&per_page=100&format=json&nojsoncallback=1`;
-        let fetchURL;
-        props.urlType === 'get-images' || props.refreshed > 0 ?
-            fetchURL = getImages : fetchURL = searchImages;
-
+        const searchImages = `${BASE_URL}?method=${SERACHIMAGES}&api_key=${API_KEY}&text=${searchText}&page=${pageNum}&per_page=100&format=json&nojsoncallback=1`;
+        setUrlType(urlType);
+        let fetchURL = urlType === 'search-images' ? searchImages : getImages;
+        console.log(urlType, newItem, pageNum);
         axios.get(fetchURL)
             .then((response) => {
                 // console.log(response.data.photos)
                 response.data.photos.page === response.data.photos.pages ? setHasMore(false) : setHasMore(true);
-                setPhotos(arrangePhotos(photos, response.data.photos.photo));
+                if (urlType === 'search-images') {
+                    newItem ? setPhotos(arrangePhotos([], response.data.photos.photo)) :
+                        setPhotos(arrangePhotos(photos, response.data.photos.photo));
+
+                } else {
+                    newItem ? setPhotos(arrangePhotos([], response.data.photos.photo)) :
+                        setPhotos(arrangePhotos(photos, response.data.photos.photo));
+                }
                 setLoading(false);
             }).catch((err) => {
-                console.log(err.response);
+                setLoading(false);
+                console.log(err, urlType, searchText);
             });
+        setPageNum(pageNum);
+    }
 
+
+    useEffect(() => {
+        setLoading(true);
+        console.log('runn');
+        fetchImages(props.urlType, props.searchText, props.searchedNewItem ? 1 : pageNum, props.searchedNewItem)
         // console.log(props.pageNo, props.searchText, props.urlType)
-    }, [props.urlType, pageNum, props.searchText, props.refreshed]);
+    }, [props.urlType, pageNum, props.searchText, props.searchedNewItem]);
 
     return (
         <Grid container spacing={3}>
-            {photos.map((ele, index) => {
+            {props.searchedNewItem && loading === true ? <div className="loader"><CircularProgress /> </div> : photos.map((ele, index) => {
                 if (photos.length === index + 1) {
                     return <Grid ref={lastElement}
                         item xs={12} sm={6} md={4} lg={2} xl={2} key={`media-card-${index}`}>
@@ -70,7 +84,7 @@ export default function Home(props) {
                 }
             }
             )}
-            {loading === true || props.searching ? <div className="loader"><CircularProgress /> </div> : null}
+            {pageNum > 1 && (loading === true || props.searching) ? <div className="loader"><CircularProgress /> </div> : null}
         </Grid >
     )
 }
