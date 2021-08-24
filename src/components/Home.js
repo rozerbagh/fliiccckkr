@@ -11,7 +11,6 @@ export default function Home(props) {
     const [pageNum, setPageNum] = useState(1);
     const [hasMore, setHasMore] = useState(true);
 
-    const [urlType, setUrlType] = useState(props.urlType)
     const observer = useRef()
     const lastElement = useCallback((node) => {
         if (loading) return
@@ -31,7 +30,6 @@ export default function Home(props) {
     const fetchImages = (urlType, searchText, pageNum, newItem) => {
         const getImages = `${BASE_URL}?method=${GETIMAGES}&api_key=${API_KEY}&page=${pageNum}&per_page=72&format=json&nojsoncallback=1`;
         const searchImages = `${BASE_URL}?method=${SERACHIMAGES}&api_key=${API_KEY}&text=${searchText}&page=${pageNum}&per_page=100&format=json&nojsoncallback=1`;
-        setUrlType(urlType);
         let fetchURL = urlType === 'search-images' ? searchImages : getImages;
         console.log(urlType, newItem, pageNum);
         axios.get(fetchURL)

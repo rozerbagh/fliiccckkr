@@ -7,12 +7,13 @@ export const arrangePhotos = (oldPhotosArr, photosArr) => {
     const photosArray = [];
     if (oldPhotosArr.length > 0) {
         oldPhotosArr.map(ele => {
-            photosArray.push(ele);
+            return photosArray.push(ele);
         })
     }
     photosArr.map(ele => {
-        photosArray.push(ele)
+        return photosArray.push(ele)
     });
+
     return photosArray;
 }
 

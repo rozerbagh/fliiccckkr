@@ -32,7 +32,7 @@ export default function MediaCard(props) {
     };
 
     return (<>
-        <Card className={classes.root}>
+        <Card className={classes.root} {...rest}>
             <CardActionArea>
                 <CardMedia
                     className={classes.media}

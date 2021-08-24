@@ -2,7 +2,7 @@ import React, { useEffect, useState, lazy, Suspense } from 'react';
 import Container from '@material-ui/core/Container';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import AppBar from './components/Navbar';
-import { API_KEY, arrangePhotos, BASE_URL, saveToLocalStorage } from './Utils';
+import { saveToLocalStorage } from './Utils';
 
 const Home = lazy(() => import("./components/Home"));
 

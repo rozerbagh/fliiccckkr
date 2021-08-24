@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
     },
     image: {
         width: "100%",
+        position: 'relative',
     }
 }));
 
@@ -24,7 +25,7 @@ export default function SimpleModal(props) {
 
     const body = (
         <div className={classes.paper}>
-            <img src={props.imgUrl} />
+            <img src={props.imgUrl} alt={props.title} className={classes.image} />
             <h4>{props.title}</h4>
         </div>
     );
