@@ -33,7 +33,7 @@ export default function MediaCard(props) {
 
     return (<>
         <Card className={classes.root} {...rest}>
-            <CardActionArea>
+            <CardActionArea onClick={handleOpenImageModal}>
                 <CardMedia
                     className={classes.media}
                     image={imgUrl}

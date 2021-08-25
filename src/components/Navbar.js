@@ -73,7 +73,7 @@ export default function PrimarySearchAppBar(props) {
     useEffect(() => {
         const searcheArr = [];
         props.searchedTags.map(ele => {
-            searcheArr.push({
+            return searcheArr.push({
                 title: ele.title,
                 date: ele.date
             })
@@ -100,6 +100,7 @@ export default function PrimarySearchAppBar(props) {
                                 }
                                 return option.title === value.title
                             }}
+                            onClose={() => setSearchInput('')}
                             getOptionLabel={(option) => option.title}
                             renderInput={(params) =>
                                 <TextField {...params}

@@ -25,7 +25,7 @@ export default function Home(props) {
             }
         })
         if (node) observer.current.observe(node)
-    }, [loading, pageNum]);
+    }, [loading, pageNum, hasMore]);
 
     const fetchImages = (urlType, searchText, pageNum, newItem) => {
         const getImages = `${BASE_URL}?method=${GETIMAGES}&api_key=${API_KEY}&page=${pageNum}&per_page=72&format=json&nojsoncallback=1`;
