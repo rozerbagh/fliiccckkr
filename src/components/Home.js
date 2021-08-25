@@ -6,11 +6,19 @@ import MediaCard from "./Card"
 import { API_KEY, arrangePhotos, BASE_URL, GETIMAGES, SERACHIMAGES } from '../Utils'
 
 export default function Home(props) {
+    // state for the photos array
     const [photos, setPhotos] = useState([]);
+
+    // state for the fetching loading.
     const [loading, setLoading] = useState(true);
+
+    // state for the page number.
     const [pageNum, setPageNum] = useState(1);
+
     const [hasMore, setHasMore] = useState(true);
 
+
+    // for infinite scrolling functionality.
     const observer = useRef()
     const lastElement = useCallback((node) => {
         if (loading) return
@@ -26,7 +34,9 @@ export default function Home(props) {
         })
         if (node) observer.current.observe(node)
     }, [loading, pageNum, hasMore]);
+    // for infinite scrolling functionality.
 
+    // calling the API for searching and fetching the images
     const fetchImages = (urlType, searchText, pageNum, newItem) => {
         const getImages = `${BASE_URL}?method=${GETIMAGES}&api_key=${API_KEY}&page=${pageNum}&per_page=72&format=json&nojsoncallback=1`;
         const searchImages = `${BASE_URL}?method=${SERACHIMAGES}&api_key=${API_KEY}&text=${searchText}&page=${pageNum}&per_page=100&format=json&nojsoncallback=1`;
@@ -52,7 +62,7 @@ export default function Home(props) {
         setPageNum(pageNum);
     }
 
-
+    // updating the state as per the global App state
     useEffect(() => {
         setLoading(true);
         console.log('runn');

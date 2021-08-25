@@ -7,15 +7,21 @@ import { saveToLocalStorage } from './Utils';
 const Home = lazy(() => import("./components/Home"));
 
 function App(props) {
+    // handling the search input state.
     const [searchedName, setSearchedName] = useState([{
         title: 'mountain',
         date: new Date().getTime()
     }]);
     const [currSearchedText, setCurrSearchedText] = useState('');
     const [urlType, setURLType] = useState('get-images');
+
+    // while searching setting it to the loading type boolean.
     const [searching, setSearching] = useState(false);
+
+    // for updating search paginations
     const [newItem, setNewItem] = useState(true);
 
+    // Handle the main components search bar for two-way data binding.
     const handleSearch = (val) => {
         setSearching(true);
         console.log(val.length === 0);
@@ -34,6 +40,7 @@ function App(props) {
         }
     };
 
+    // changing state on the and storing the search queries.
     useEffect(() => {
         const getlsSearchedItems = JSON.parse(localStorage.getItem('searchedNameList'));
         if (getlsSearchedItems === null || getlsSearchedItems === undefined) {
@@ -43,6 +50,7 @@ function App(props) {
         }
     }, []);
 
+    // changing the functions as per the state of the.
     const handleNewItem = bool => setNewItem(bool)
 
     return (
