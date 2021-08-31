@@ -89,11 +89,7 @@ export default function PrimarySearchAppBar(props) {
     }
 
     useEffect(() => {
-        if (searchInput.length >= 3) {
-            handleOpenSearchedBox();
-        } else {
-            setOpenSerachedName(false);
-        }
+        handleOpenSearchedBox();
     }, [searchInput])
     const dateRef = useRef();
     useEffect(() => {
@@ -116,24 +112,27 @@ export default function PrimarySearchAppBar(props) {
                     <Typography className={classes.title} variant="h6" noWrap>
                         Search Images
                     </Typography>
-                    <div className={classes.search} ref={dateRef}>
-                        <TextField
-                            onFocus={handleOpenSearchedBox}
-                            fullWidth
-                            size="small"
-                            value={searchInput}
-                            onChange={handleInput}
-                            label="Search"
-                            variant="outlined"
-                            placeholder="Type 3 char to search..." />
-                        {openSearhedName ? <div className="search-suggestions" >
-                            {searchedName.map(ele => <span key={ele.date} onClick={() => props.search(ele.title)}>
-                                {ele.title}
-                            </span>)}
-                        </div> : null}
-                    </div>
+                    <form onSubmit={(e) => props.search(e, searchInput)} className={classes.search}>
+                        <div ref={dateRef}>
+                            <TextField
+                                onFocus={handleOpenSearchedBox}
+                                fullWidth
+                                size="small"
+                                value={searchInput}
+                                onChange={handleInput}
+                                label="Search"
+                                variant="outlined"
+                                placeholder="Type 3 char to search..." />
+                            {openSearhedName ? <div className="search-suggestions" >
+                                {searchedName.map(ele => <span key={ele.date} onClick={(e) => props.search(e, ele.title)}>
+                                    {ele.title}
+                                </span>)}
+                            </div> : null}
+                        </div>
+                    </form>
+
                     <Button
-                        onClick={() => props.search(searchInput)}
+                        onClick={(e) => props.search(e, searchInput)}
                         variant="contained"
                         color="primary"
                         className={classes.button}
@@ -142,7 +141,7 @@ export default function PrimarySearchAppBar(props) {
                         <SearchIcon />
                     </Button>
                     <IconButton
-                        onClick={() => props.search('')}
+                        onClick={(e) => props.search(e, '')}
                         variant="contained"
                         color="primary"
                         className={classes.button}

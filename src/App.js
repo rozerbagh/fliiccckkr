@@ -21,7 +21,8 @@ function App(props) {
     const [newItem, setNewItem] = useState(true);
 
     // Handle the main components search bar for two-way data binding.
-    const handleSearch = (val) => {
+    const handleSearch = (e, val) => {
+        e.preventDefault();
         console.log(val)
         setSearching(true);
         console.log(val.length === 0);
