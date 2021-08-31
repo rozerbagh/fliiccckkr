@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { alpha, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -30,9 +30,9 @@ const useStyles = makeStyles((theme) => ({
         '&:hover': {
             backgroundColor: alpha(theme.palette.common.white, 0.25),
         },
-        width: '100%',
+        width: '80%',
         marginRight: theme.spacing(2),
-        marginLeft: 0,
+        margin: "0 auto",
         [theme.breakpoints.up('sm')]: {
             marginLeft: theme.spacing(3),
         },
@@ -67,7 +67,8 @@ export default function PrimarySearchAppBar(props) {
     const handleInput = (e) => {
         setSearchInput(e.target.value);
     }
-
+    // State for handling the opening searching
+    const [openSearhedName, setOpenSerachedName] = useState(false);
     const [searchedName, setSearchedName] = useState([]);
 
     useEffect(() => {
@@ -79,39 +80,57 @@ export default function PrimarySearchAppBar(props) {
             })
         })
         setSearchedName(searcheArr)
-    }, [props.searchedTags])
+    }, [props.searchedTags]);
+
+    const handleOpenSearchedBox = () => {
+        const found = searchedName.filter(str => str.title.toLowerCase().includes(searchInput.toLowerCase()));
+        setSearchedName(found);
+        found.length > 0 ? setOpenSerachedName(true) : setOpenSerachedName(false);
+    }
+
+    useEffect(() => {
+        if (searchInput.length >= 3) {
+            handleOpenSearchedBox();
+        } else {
+            setOpenSerachedName(false);
+        }
+    }, [searchInput])
+    const dateRef = useRef();
+    useEffect(() => {
+        const handler = (e) => {
+            if (!dateRef.current.contains(e.target)) {
+                setOpenSerachedName(false)
+            }
+        }
+        document.addEventListener('mousedown', handler);
+
+        return () => {
+            document.removeEventListener('mousedown', handler)
+        }
+    })
 
     return (
         <div className={classes.grow}>
             <AppBar position="sticky" color="inherit">
                 <Toolbar>
                     <Typography className={classes.title} variant="h6" noWrap>
-                        RanDomClick
+                        Search Images
                     </Typography>
-                    <div className={classes.search}>
-                        <Autocomplete
-                            id="combo-box-demo"
-                            inputValue={searchInput}
-                            options={searchedName}
+                    <div className={classes.search} ref={dateRef}>
+                        <TextField
+                            onFocus={handleOpenSearchedBox}
                             fullWidth
-                            getOptionSelected={(option, value) => {
-                                if (option.title === value.title) {
-                                    setSearchInput(option.title)
-                                }
-                                return option.title === value.title
-                            }}
-                            onClose={() => setSearchInput('')}
-                            getOptionLabel={(option) => option.title}
-                            renderInput={(params) =>
-                                <TextField {...params}
-                                    fullWidth
-                                    size="small"
-                                    value={searchInput}
-                                    onChange={handleInput}
-                                    label="Search"
-                                    variant="outlined"
-                                    placeholder="Type 3 char to search..." />}
-                        />
+                            size="small"
+                            value={searchInput}
+                            onChange={handleInput}
+                            label="Search"
+                            variant="outlined"
+                            placeholder="Type 3 char to search..." />
+                        {openSearhedName ? <div className="search-suggestions" >
+                            {searchedName.map(ele => <span key={ele.date} onClick={() => props.search(ele.title)}>
+                                {ele.title}
+                            </span>)}
+                        </div> : null}
                     </div>
                     <Button
                         onClick={() => props.search(searchInput)}

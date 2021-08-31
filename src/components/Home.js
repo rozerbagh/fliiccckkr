@@ -49,7 +49,6 @@ export default function Home(props) {
                 if (urlType === 'search-images') {
                     newItem ? setPhotos(arrangePhotos([], response.data.photos.photo)) :
                         setPhotos(arrangePhotos(photos, response.data.photos.photo));
-
                 } else {
                     newItem ? setPhotos(arrangePhotos([], response.data.photos.photo)) :
                         setPhotos(arrangePhotos(photos, response.data.photos.photo));
@@ -65,7 +64,7 @@ export default function Home(props) {
     // updating the state as per the global App state
     useEffect(() => {
         setLoading(true);
-        console.log('runn');
+        // console.log('runn');
         fetchImages(props.urlType, props.searchText, props.searchedNewItem ? 1 : pageNum, props.searchedNewItem)
         // console.log(props.pageNo, props.searchText, props.urlType)
     }, [props.urlType, pageNum, props.searchText, props.searchedNewItem]);

@@ -2,9 +2,8 @@ import React, { useEffect, useState, lazy, Suspense } from 'react';
 import Container from '@material-ui/core/Container';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import AppBar from './components/Navbar';
+import Home from './components/Home';
 import { saveToLocalStorage } from './Utils';
-
-const Home = lazy(() => import("./components/Home"));
 
 function App(props) {
     // handling the search input state.
@@ -23,6 +22,7 @@ function App(props) {
 
     // Handle the main components search bar for two-way data binding.
     const handleSearch = (val) => {
+        console.log(val)
         setSearching(true);
         console.log(val.length === 0);
         if (val.length >= 3) {
